@@ -1,0 +1,66 @@
+-- 회원 테이블 생성
+create table custom_user (
+	custom_user_idx int(11),
+	constraint custom_user_pk primary key(custom_user_idx),
+	custom_user_name varchar(100) not null,
+	custom_user_nick varchar(100) not null,
+	custom_user_email varchar(100) not null,
+	custom_user_pswd varchar(100) not null,
+	custom_user_birth varchar(100) not null,
+	custom_user_phone varchar(100) not null,
+	custom_user_address varchar(100) not null,
+	custom_user_auth varchar(2) default '2' not null,
+	custom_user_del_yn varchar(2) default 'n' not null,
+	custom_user_reg_date datetime default now() not null,
+	custom_user_mod_date datetime default now() not null
+);
+
+-- 회원 테이블 삭제
+drop table custom_user;
+
+-- 회원 시퀀스 생성
+create sequence user_seq
+increment by 1
+start with 1
+minvalue 1
+maxvalue 9999
+nocycle
+nocache;
+
+-- 회원 시퀀스 1부터 다시 시작
+alter sequence user_seq restart 1;
+
+-- 회원 시퀀스 삭제
+drop sequence user_seq;
+
+select * from custom_user;
+
+-- 게시판 테이블
+create table general_board (
+	board_idx int(11),
+	constraint board_pk primary key(board_idx),
+	board_title varchar(1000) not null,
+	board_text varchar(100) not null,
+	board_writer_idx int(11) not null,
+	constraint board_fk1 foreign key(board_writer_idx) references custom_user(custom_user_idx),
+	board_reg_date datetime default now() not null,
+	board_mod_date datetime default now() not null,
+	board_img_path varchar(100),
+	board_del_yn varchar(2) default 'n' not null
+);
+
+drop table if exists general_board;
+
+create sequence board_seq
+increment by 1
+start with 1
+minvalue 1
+maxvalue 9999
+nocycle
+nocache;
+
+alter sequence board_seq restart 1;
+
+drop sequence board_seq;
+
+select * from general_board;

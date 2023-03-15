@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+ <mapper namespace="com.tech.spring.dao.CustomBoardDao">
+ 
+	<!-- 게시판 글개수 -->
+	<select id="countBoard" resultType="int">
+		select count(*)
+		from general_board
+		where (board_title like concat('%',#{keyword},'%') or board_text like concat('%',#{keyword},'%') or board_writer like concat('%',#{keyword},'%')) and board_del_yn = 'n'
+	</select>
+
+	<!-- 게시판 목록 -->
+	<select id="board" resultType="BoardDto">
+		select row_number() over(order by a.board_seq desc) as no, a.*, b.review_count
+		from general_board a
+		left join
+		(select review.board_seq, count(*) as review_count from review where review_del_yn = 'n' group by review.board_seq) b 
+		on a.board_seq = b.board_seq
+		where board_del_yn = 'n' and (board_title like concat('%',#{keyword},'%') or board_text like concat('%',#{keyword},'%') or board_writer like concat('%',#{keyword},'%'))
+	</select>
+	
+	<!-- 게시판 등록 -->
+	<insert id="write" parameterType="BoardDto">
+		insert into general_board(board_title, board_text, board_writer, board_reg_date, board_mod_date, board_img_path, board_del_yn)
+		values(#{board_title}, #{board_text}, #{board_writer}, sysdate(), sysdate(), #{board_img_path}, 'n')
+	</insert>
+	
+	<!-- 게시판 상세 -->
+	<select id="detail" parameterType="int" resultType="BoardDto">
+		select * from general_board
+		where board_seq = #{board_seq}
+	</select>
+	
+	<!-- 게시판 삭제 -->
+	<update id="remove" parameterType="String">
+		update general_board set board_del_yn='y'
+		where board_seq = #{board_seq}
+	</update>
+	
+	<!-- 게시판 수정페이지 -->
+	<select id="editPage" parameterType="int" resultType="BoardDto">
+		select * from general_board
+		where board_seq = #{board_seq}
+	</select>
+	
+	<!-- 게시판 수정 -->
+	<update id="edit" parameterType="BoardDto">
+		update general_board set board_title=#{board_title}, board_text=#{board_text}, board_img_path=#{board_img_path}, board_mod_date=sysdate()
+		where board_seq = #{board_seq}
+	</update>
+
+	<!-- 리뷰 목록 -->
+	<select id="review" resultType="BoardDto">
+		select review_seq, review_writer, review_mod_date, review_text
+		from general_board, review
+		where general_board.board_seq = #{board_seq} and review.board_seq = #{board_seq} and review.review_del_yn = 'n'
+		order by review_seq desc
+	</select>
+	
+	<!-- 리뷰 등록 -->
+	<insert id="writeReview" parameterType="BoardDto">
+		insert into review(board_seq, review_writer, review_reg_date, review_mod_date, review_text, review_del_yn)
+		values(#{board_seq}, #{review_writer}, sysdate(), sysdate(), #{review_text}, 'n')
+	</insert>
+	
+	<!-- 리뷰 삭제 -->
+	<update id="deleteReview" parameterType="int">
+		update review set review_del_yn='y'
+		where review_seq = #{review_seq}
+	</update>
+
+	<!-- 게시판 리뷰 개수 -->
+	<select id="countReview" resultType="int">
+		select count(*)
+		from review
+		where review_del_yn = 'n' and board_seq = #{board_seq}
+	</select>
+			
+</mapper>
