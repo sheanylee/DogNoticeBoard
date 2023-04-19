@@ -27,4 +27,7 @@ public interface CustomUserDao {
 
 	//유저 목록
 	List<UserDto> user();
+
+	//카카오 회원가입
+	int kakaoRegister(Map<String, Object> map);
 }

@@ -62,5 +62,11 @@ public class CustomUserDaompl implements CustomUserDao {
 	@Override
 	public List<UserDto> user() {
 		return sql.selectList(namespace+".user");
+	}
+
+	//카카오 회원가임
+	@Override
+	public int kakaoRegister(Map<String, Object> map) {
+		return sql.insert(namespace+".kakaoRegister", map);
 	}	
 }

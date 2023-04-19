@@ -36,5 +36,7 @@ public class BoardDto {
 	private String review_del_yn; /*리뷰 삭제여부*/
 	private int review_count; /*리뷰 개수*/
 	
+	private int recommend; //추천
+	
 }
 

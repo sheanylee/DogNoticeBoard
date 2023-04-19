@@ -124,7 +124,7 @@ function register(){
 				data : data,
 				success : function(data){
 					alert("회원가입되었습니다.");
-					location.href="/dogNoticeboard/main";
+					location.href="/dogNoticeboard/user/login";
 				},
 				error : function(){
 					alert("회원가입 실패");

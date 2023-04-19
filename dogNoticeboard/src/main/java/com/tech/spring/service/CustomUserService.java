@@ -23,6 +23,9 @@ public interface CustomUserService {
 	int randomPswd(UserDto inputDto);
 
 	//유저 목록
-	List<UserDto> user();	
+	List<UserDto> user();
+
+	//카카오회원가입
+	int kakaoRegister(Map<String, Object> map);	
 }
 

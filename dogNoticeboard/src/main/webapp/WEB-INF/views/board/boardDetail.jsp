@@ -85,16 +85,21 @@
                                 </table>
 		                        <button class="btn btn-secondary my-2 my-sm-0" type="button" onclick="location.href='${path}/board/board?pageNumber=${pageNumber}'">목록</button>
 		                        <c:choose>
-                        			<c:when test="${getDto.custom_user_auth == '1' and getDto.custom_user_nick != BoardDto.board_writer}">
-		                        		<button class="btn btn-danger my-2 my-sm-0" type="button" onclick="location.href='${path}/board/remove?board_seq=${BoardDto.board_seq}'">삭제</button>
+                        			<c:when test="${getDto.custom_user_nick == BoardDto.board_writer or getDto.custom_user_auth == '1'}">
+		                        		<button class="btn btn-danger my-2 my-sm-0" type="button" onclick="location.href='${path}/board/remove?board_seq=${BoardDto.board_seq}&board_img_path=${BoardDto.board_img_path}'">삭제</button>
 									</c:when>
 								</c:choose>
 		                        <c:choose>
                         			<c:when test="${getDto.custom_user_nick == BoardDto.board_writer}">
 		                        		<button class="btn btn-primary my-2 my-sm-0" type="button"onclick="location.href='${path}/board/edit?board_seq=${BoardDto.board_seq}&board_img_path=${BoardDto.board_img_path}'">수정</button>
-		                        		<button class="btn btn-danger my-2 my-sm-0" type="button" onclick="location.href='${path}/board/remove?board_seq=${BoardDto.board_seq}&board_img_path=${BoardDto.board_img_path}'">삭제</button>
 									</c:when>
 								</c:choose>
+		                        <c:choose>
+                        			<c:when test="${getDto.custom_user_nick != null}">
+		                        		<button style="background-color:#FF85CA;" class="btn btn my-2 my-sm-0" type="button" onclick="location.href='${path}/board/recommend?board_seq=${BoardDto.board_seq}&pageNumber=${pageNumber}&custom_user_nick=${getDto.custom_user_nick}'">추천</button>
+									</c:when>
+								</c:choose>
+								<b style="color: #4374D9">&nbsp;추천수 : ${BoardDto.recommend}</b>
                             </div>
                         
                         	<!-- 2월 27일 게시판 댓글 -->

@@ -14,11 +14,17 @@
 
 	<!-- 게시판 목록 -->
 	<select id="board" resultType="BoardDto">
-		select row_number() over(order by a.board_seq desc) as no, a.*, b.review_count
+		select row_number() over(order by a.board_seq desc) as no, a.*, b.review_count, c.recommend
 		from general_board a
 		left join
 		(select review.board_seq, count(*) as review_count from review where review_del_yn = 'n' group by review.board_seq) b 
 		on a.board_seq = b.board_seq
+		left join
+		(select general_board.board_seq, count(*) as recommend
+		from recommend, general_board
+		where recommend.board_seq = general_board.board_seq
+		group by general_board.board_seq) c
+		on a.board_seq = c.board_seq
 		where board_del_yn = 'n' and (board_title like concat('%',#{keyword},'%') or board_text like concat('%',#{keyword},'%') or board_writer like concat('%',#{keyword},'%'))
 	</select>
 	
@@ -30,8 +36,15 @@
 	
 	<!-- 게시판 상세 -->
 	<select id="detail" parameterType="int" resultType="BoardDto">
-		select * from general_board
-		where board_seq = #{board_seq}
+		select a.*, c.recommend
+		from general_board a
+		left join
+		(select general_board.board_seq, count(*) as recommend
+		from recommend, general_board
+		where recommend.board_seq = general_board.board_seq
+		group by general_board.board_seq) c
+		on a.board_seq = c.board_seq
+		where a.board_seq = #{board_seq}
 	</select>
 	
 	<!-- 게시판 삭제 -->
@@ -79,4 +92,15 @@
 		where review_del_yn = 'n' and board_seq = #{board_seq}
 	</select>
 			
+	<!-- 게시판 추천 -->
+	<insert id="recommend" parameterType="com.tech.spring.dto.RecommendDto">
+		insert into recommend(board_seq, custom_user_nick)
+		values(#{board_seq}, #{custom_user_nick})
+	</insert>	
+	
+	<!-- 게시판 추천 개수 -->
+	<select id="countRecommend" parameterType="com.tech.spring.dto.RecommendDto" resultType="int">
+		select count(*) from recommend
+		where board_seq = #{board_seq} and custom_user_nick = #{custom_user_nick}
+	</select>		
 </mapper>

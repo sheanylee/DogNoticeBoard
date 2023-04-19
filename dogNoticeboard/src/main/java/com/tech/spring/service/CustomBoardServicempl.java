@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.tech.spring.dao.CustomBoardDao;
 import com.tech.spring.dao.CustomUserDao;
 import com.tech.spring.dto.BoardDto;
+import com.tech.spring.dto.RecommendDto;
 import com.tech.spring.dto.UserDto;
 import com.tech.spring.vopage.PageVO;
 import com.tech.spring.vopage.PageVO_review;
@@ -86,6 +87,18 @@ public class CustomBoardServicempl implements CustomBoardService{
 	@Override
 	public int countReview(int board_seq) {
 		return dao.countReview(board_seq);
+	}
+
+	//게시판 추천
+	@Override
+	public int recommend(RecommendDto dto) {
+		return dao.recommend(dto);
+	}
+
+	//게시판 추천 확인
+	@Override
+	public int countRecommend(RecommendDto dto) {
+		return dao.countRecommend(dto);
 	}
 	
 }

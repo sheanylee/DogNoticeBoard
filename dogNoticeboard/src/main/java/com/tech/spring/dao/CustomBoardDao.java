@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.tech.spring.dto.BoardDto;
+import com.tech.spring.dto.RecommendDto;
 import com.tech.spring.dto.UserDto;
 import com.tech.spring.vopage.PageVO;
 import com.tech.spring.vopage.PageVO_review;
@@ -43,5 +44,11 @@ public interface CustomBoardDao {
 
 	//게시판 리뷰 개수
 	int countReview(int board_seq);
+
+	//게시판 추천
+	int recommend(RecommendDto dto);
+
+	//게시판 추천 확인
+	int countRecommend(RecommendDto dto);
 
 }

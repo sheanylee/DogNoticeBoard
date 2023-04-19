@@ -35,6 +35,54 @@ import com.tech.spring.service.CustomUserService;
 public class CustomUserController {
 	
 	@Autowired CustomUserService service;
+
+	//4월10일 카카오회원가입
+	@RequestMapping(value="/kakaoRegister", method=RequestMethod.POST)
+	@ResponseBody
+	public String kakaoRegister(@RequestParam Map<String, Object> map) {
+		System.out.println("카카오회원가입");
+		System.out.println(map);
+		int success=service.kakaoRegister(map);
+		System.out.println("성공:"+success);
+		return null;
+	}	
+	
+	//4월12일 카카오로그인
+	@RequestMapping(value="/kakaoLogin", method=RequestMethod.POST)
+	@ResponseBody
+	public ModelAndView kakaoLogin(@RequestParam Map<String, Object> map,
+							  @ModelAttribute("inputDto") UserDto inputDto,
+							  HttpSession session,
+							  HttpServletRequest request,
+							  HttpServletResponse response,
+							  RedirectAttributes redirect) throws IOException {
+		System.out.println("로그인");
+		System.out.println(map.get("custom_user_nick")+"/"+map.get("custom_user_pswd"));
+		
+		inputDto.setCustom_user_nick((String) map.get("custom_user_nick"));
+		inputDto.setCustom_user_pswd((String) map.get("custom_user_pswd"));
+		
+		ModelAndView mav=new ModelAndView();
+		response.setContentType("text/html; charset=UTF-8");
+		PrintWriter writer=response.getWriter();
+		UserDto getDto=service.login(inputDto);
+		if(getDto != null) {
+			System.out.println("받아오는 이름:"+getDto.getCustom_user_name());
+			session = request.getSession();
+			session.setAttribute("getDto", getDto);
+			session.setAttribute("login", true);
+			mav.setViewName("redirect:/main");
+		}
+		else {
+			redirect.addAttribute("result", "loginFail");
+			writer.println("<script type='text/javascript'>");
+			writer.println("alert('회원정보가 없습니다.');");
+			writer.println("</script>");
+			writer.flush();
+			mav.setViewName("/user/login");
+		}
+		return mav;
+	}
 	
 	//1월2일 회원가입 페이지
 	@RequestMapping("/register")

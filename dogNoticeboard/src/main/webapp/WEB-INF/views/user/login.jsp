@@ -60,6 +60,12 @@
 				                            </button>
 				                        </div>
 			                        </form>
+			                        
+			                        <!-- 4월 10일 카카오 간편로그인 -->
+			                        <div class="text-center">
+				                        <img src="${path}/resources/img/kakao_login_medium_wide.png" onclick="kakaoLogin();" width="100%" height="40px">
+			                        </div>
+									
                                     <hr>
                                     <div class="text-center">
                                         <a class="small" href="${path }/user/forgetPswd">Forgot Password?</a>
@@ -78,7 +84,78 @@
 
         </div>
 
-    <script src="${path }/resources/js/login.js"></script>
+	<!-- 4월 10일 카카오 간편로그인 -->
+	<script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+	<script>
+	Kakao.init('0e60c8b6c3cfdac7de6f3e9c58684604'); //발급받은 키 중 javascript키를 사용해준다.
+	console.log(Kakao.isInitialized()); // sdk초기화여부판단
+	//카카오로그인
+	function kakaoLogin() {
+	    Kakao.Auth.login({
+	      success: function (response) {
+	        Kakao.API.request({
+	          url: '/v2/user/me',
+	          success: function (response) {
+	        	  var custom_user_name = response.kakao_account.profile.nickname;
+	        	  var custom_user_nick = response.kakao_account.email;
+	        	  var custom_user_email = response.kakao_account.email;
+	        	  var custom_user_pswd = response.id;
+	        	  
+	        	  console.log(custom_user_name+"/"+custom_user_nick+"/"+custom_user_pswd+"/"+custom_user_email);
+					$.ajax({
+						url : "idcheck",
+						type : "post",
+						data : custom_user_nick,
+						dataType : 'text',
+						contentType: 'application/json; charset=utf-8',
+						success : function(cnt){
+							console.log("가입된카카오계정이면1/아니면0:"+cnt);
+							if(cnt==0){
+								let data={'custom_user_name':custom_user_name,
+										  'custom_user_nick':custom_user_nick,
+										  'custom_user_email':custom_user_email,
+										  'custom_user_pswd':custom_user_pswd}
+								$.ajax({
+									url : "kakaoRegister",
+									type : "post",
+									data : data,
+									success : function(data){
+										alert("카카오 계정으로 가입되었습니다.");
+										location.href="/dogNoticeboard/main";
+									},
+									error : function(){
+										alert("회원가입 실패");
+									}
+								});
+							}
+							let data={'custom_user_nick':custom_user_nick,
+									  'custom_user_pswd':custom_user_pswd}
+							$.ajax({
+									url : "kakaoLogin",
+									type : "post",
+									data : data,
+									success : function(data){
+										alert("카카오 계정으로 로그인되었습니다.");
+										location.href="/dogNoticeboard/main";
+									},
+									error : function(){
+										alert("로그인 실패");
+									}
+							});
+						}
+					});
+	          },
+	          fail: function (error) {
+	            console.log(error)
+	          },
+	        })
+	      },
+	      fail: function (error) {
+	        console.log(error)
+	      },
+	    })
+	  }
+	</script>
 
     <!-- Bootstrap core JavaScript-->
     <script src="${path}/resources/vendor/jquery/jquery.min.js"></script>

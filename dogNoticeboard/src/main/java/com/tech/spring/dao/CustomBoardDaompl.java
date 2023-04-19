@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.tech.spring.dto.BoardDto;
+import com.tech.spring.dto.RecommendDto;
 import com.tech.spring.dto.UserDto;
 import com.tech.spring.vopage.PageVO;
 import com.tech.spring.vopage.PageVO_review;
@@ -92,6 +93,18 @@ public class CustomBoardDaompl implements CustomBoardDao {
 	@Override
 	public int countReview(int board_seq) {
 		return sql.selectOne(namespace+".countReview", board_seq);
+	}
+
+	//게시판 추천
+	@Override
+	public int recommend(RecommendDto dto) {
+		return sql.insert(namespace+".recommend", dto);
+	}
+
+	//게시판 추천 확인
+	@Override
+	public int countRecommend(RecommendDto dto) {
+		return sql.selectOne(namespace+".countRecommend", dto);
 	}
 
 }

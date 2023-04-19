@@ -3,6 +3,28 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="path" value="${pageContext.request.contextPath }"/>
 
+<script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+<script>
+Kakao.init('0e60c8b6c3cfdac7de6f3e9c58684604'); //발급받은 키 중 javascript키를 사용해준다.
+console.log(Kakao.isInitialized()); // sdk초기화여부판단
+//카카오로그아웃  
+function logout() {
+    if (Kakao.Auth.getAccessToken()) {
+      Kakao.API.request({
+        url: '/v1/user/unlink',
+        success: function (response) {
+        	console.log(response)
+        },
+        fail: function (error) {
+          console.log(error)
+        },
+      })
+      Kakao.Auth.setAccessToken(undefined)
+      alert("카카오 로그아웃");
+    }
+    location.href="${path}/user/logout"
+ }  
+</script>
 <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
@@ -67,7 +89,7 @@
 							    ${getDto.custom_user_name} &nbsp; <img src="${path }/resources/img/undraw_profile.svg" height="40px">
 							  </button>
 							  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-							    <a class="dropdown-item" href="${path }/user/logout">Logout</a>
+							    <a class="dropdown-item" onclick="logout()">Logout</a>
 							  </div>
 							</div>
                     	</c:when>

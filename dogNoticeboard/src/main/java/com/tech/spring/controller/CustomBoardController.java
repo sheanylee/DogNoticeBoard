@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.tech.spring.dto.BoardDto;
+import com.tech.spring.dto.RecommendDto;
 import com.tech.spring.service.CustomBoardService;
 import com.tech.spring.service.CustomUserService;
 import com.tech.spring.vopage.PageVO;
@@ -274,8 +275,41 @@ public class CustomBoardController {
 			writer.println("</script>");
 			writer.flush();
 		}
-		
 		return null;
 	}	
+	
+	//3월16일 게시판 추천
+	@RequestMapping(value="/recommend", method=RequestMethod.GET)
+	public String recommend(RecommendDto dto,
+							int pageNumber,
+							HttpServletResponse response) throws IOException {
+		System.out.println(dto.getBoard_seq()+"/"+dto.getCustom_user_nick());
+		response.setContentType("text/html; charset=UTF-8");
+		PrintWriter writer=response.getWriter();
+		
+		int count = service.countRecommend(dto);
+		
+		if(count == 1) {
+			writer.println("<script type='text/javascript'>");
+			writer.println("alert('이미 추천한 글입니다.');");
+			writer.println("location.href='detail?board_seq="+dto.getBoard_seq()+"&pageNumber="+pageNumber+"'");
+			writer.println("</script>");
+			writer.flush();			
+		}
+		else {
+			int result = service.recommend(dto);
+			System.out.println("추천성공시1:"+result);
+			if(result == 1) {
+				writer.println("<script type='text/javascript'>");
+				writer.println("alert('게시글을 추천합니다.');");
+				writer.println("location.href='detail?board_seq="+dto.getBoard_seq()+"&pageNumber="+pageNumber+"'");
+				writer.println("</script>");
+				writer.flush();
+			}
+		}
+		
+		
+		return null;
+	}
 	
 }

@@ -50,5 +50,11 @@ public class CustomUserServicempl implements CustomUserService{
 	@Override
 	public List<UserDto> user() {
 		return dao.user();
+	}
+
+	//카카오 회원가입
+	@Override
+	public int kakaoRegister(Map<String, Object> map) {
+		return dao.kakaoRegister(map);
 	}	
 }

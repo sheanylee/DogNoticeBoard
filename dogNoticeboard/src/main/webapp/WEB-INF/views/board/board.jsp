@@ -76,11 +76,12 @@
 											  <thead>
 											    <tr class="table-active">
 											      <th scope="col"><input type="checkbox" name="checkbox" onclick="checkAll(this)"></th>
-											      <th scope="col" width="10%">글 번호</th>
+											      <th scope="col" width="10%">번호</th>
 											      <th scope="col" width="10%">작성자</th>
-											      <th scope="col" width="20%">제목</th>
-											      <th scope="col" width="40%">내용</th>
+											      <th scope="col" width="15%">제목</th>
+											      <th scope="col" width="35%">내용</th>
 											      <th scope="col" width="20%">수정일</th>
+											      <th scope="col" width="10%">추천수</th>
 											    </tr>
 											  </thead>
 											  <tbody>
@@ -106,6 +107,7 @@
 												      </td>
 												      <fmt:formatDate var="board_mod_date" value="${general_board.board_mod_date}" type="date" pattern="yyyy-MM-dd HH:mm"/>
 												      <td>${board_mod_date}</td>
+												      <td>${general_board.recommend}</td>
 												    </tr>
 											    </c:forEach>
 											  </tbody>
